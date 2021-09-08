@@ -8,9 +8,9 @@ import java.util.HashMap;
 public class LZWObject {
 	//get a string out of your original string; make a dictionary; convert the output string resultant from your output pattern to a byte array; print byte array to file using writeByteArrayToFile from apache
 	//try to maybe write to a .bin might make things easier
-	private static HashMap <Integer, String> dictionary;
+	private static HashMap <String, Integer> dictionary;
 	private static File message;
-	public LZWObject(HashMap<Integer, String> dictionary, File message) {
+	public LZWObject(HashMap<String, Integer> dictionary, File message) {
 		super();
 		this.dictionary = dictionary;
 		this.message = message;
@@ -26,11 +26,12 @@ public class LZWObject {
 				current = "" + (char)reader.read();
 			}
 			else {
-				dictionary.put(codeOn, current);
+				dictionary.put(current, codeOn);
 				current = current + (char)reader.read();
 				codeOn++;
 			}
 		}
+		
 		
 	}
 }
