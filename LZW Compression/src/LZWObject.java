@@ -26,7 +26,6 @@ public class LZWObject {
 		int codeOn = 256;
 		while (reader.ready()) {
 			if (!dictionary.containsKey(current + next)) {
-				current = "" + (char)reader.read();
 				dictionary.put(current + next, codeOn);
 				nums.add(codeOn);
 				codeOn++;
@@ -74,7 +73,7 @@ public class LZWObject {
 		return ret;
 	}
 	public static void main (String [] args) throws IOException {
-		LZWObject obj = new LZWObject(new File("lzw-file3.txt"));
+		LZWObject obj = new LZWObject(new File("src/lzw-file3.txt"));
 		obj.encode();
 	}
 }
