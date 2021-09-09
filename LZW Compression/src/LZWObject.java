@@ -13,12 +13,12 @@ public class LZWObject {
 	//try to maybe write to a .bin might make things easier
 	private static HashMap <String, Integer> dictionary;
 	private static File message;
-	public LZWObject(HashMap<String, Integer> dictionary, File message) {
+	public LZWObject( File message) {
 		super();
-		this.dictionary = dictionary;
 		this.message = message;
 	}
 	public static void encode() throws IOException {
+		dictionary = new HashMap<String, Integer>();
 		FileReader reader = new FileReader(message);
 		String current = "" + (char)reader.read();
 		String next = "" + (char)reader.read();
@@ -72,5 +72,9 @@ public class LZWObject {
 			ret.add(number.toByteArray());
 		}
 		return ret;
+	}
+	public static void main (String [] args) throws IOException {
+		LZWObject obj = new LZWObject(new File("lzw-file3.txt"));
+		obj.encode();
 	}
 }
