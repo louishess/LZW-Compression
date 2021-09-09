@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LZWObject {
@@ -19,13 +20,13 @@ public class LZWObject {
 		FileReader reader = new FileReader(message);
 		String current = "" + (char)reader.read();
 		String next = "" + (char)reader.read();
+		ArrayList<Integer >nums = new ArrayList<Integer>();
 		int codeOn = 256;
-		StringBuilder output = new StringBuilder("");
 		while (reader.ready()) {
 			if (!dictionary.containsKey(current + next)) {
-				output.append(current);
 				current = "" + (char)reader.read();
 				dictionary.put(current + next, codeOn);
+				nums.add(codeOn);
 				codeOn++;
 				current = next;
 				next = "" + (char)reader.read();
@@ -36,6 +37,27 @@ public class LZWObject {
 			}
 		}
 		reader.close();
-		byte[] bytes = 
+		ArrayList<String> stringBits = allToBinary(nums);
+		
+		
+		
 	}
+	private static String toBinary(int x, int len)
+    {
+        if (len > 0)
+        {
+            return String.format("%" + len + "s",
+                            Integer.toBinaryString(x)).replaceAll(" ", "0");
+        }
+ 
+        return null;
+    }
+	private static ArrayList<String> allToBinary(ArrayList<Integer> ints) {
+		ArrayList<String> ret = new ArrayList<String>(ints.size());
+		for (int num : ints) {
+			ret.add(toBinary(num, 9));
+		}
+		return ret;
+	}
+ 
 }
