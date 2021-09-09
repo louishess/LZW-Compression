@@ -18,20 +18,24 @@ public class LZWObject {
 	public static void encode() throws IOException {
 		FileReader reader = new FileReader(message);
 		String current = "" + (char)reader.read();
+		String next = "" + (char)reader.read();
 		int codeOn = 256;
 		StringBuilder output = new StringBuilder("");
 		while (reader.ready()) {
-			if (!dictionary.containsKey(current)) {
+			if (!dictionary.containsKey(current + next)) {
 				output.append(current);
 				current = "" + (char)reader.read();
+				dictionary.put(current + next, codeOn);
+				codeOn++;
+				current = next;
+				next = "" + (char)reader.read();
 			}
 			else {
-				dictionary.put(current, codeOn);
-				current = current + (char)reader.read();
-				codeOn++;
+				current = current + next;
+				next = "" + (char)reader.read();
 			}
 		}
-		
-		
+		reader.close();
+		byte[] bytes = 
 	}
 }
