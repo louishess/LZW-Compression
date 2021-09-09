@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.math.*;
 
 public class LZWObject {
 	//get a string out of your original string; make a dictionary; convert the output string resultant from your output pattern to a byte array; print byte array to file using writeByteArrayToFile from apache
@@ -59,5 +60,14 @@ public class LZWObject {
 		}
 		return ret;
 	}
- 
+	//Byte.parseByte()? likely need to split each number into something less than 9 long
+	private static ArrayList<byte[]> stringToBinary(ArrayList<String> nums) {
+		int counter = 0;
+		ArrayList<byte[]> ret = new ArrayList<byte[]>();
+		for (String str : nums) {
+			BigInteger number = new BigInteger(str);
+			ret.add(number.toByteArray());
+		}
+		return ret;
+	}
 }
