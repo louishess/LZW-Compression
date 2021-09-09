@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,8 +40,11 @@ public class LZWObject {
 		}
 		reader.close();
 		ArrayList<String> stringBits = allToBinary(nums);
-		
-		
+		ArrayList<byte[]> bitArray = stringToBinary(stringBits);
+		FileOutputStream output = new FileOutputStream(new File ("output.txt"));
+		for (byte[] bits : bitArray) {
+			output.write(bits);
+		}
 		
 	}
 	private static String toBinary(int x, int len)
@@ -60,7 +64,6 @@ public class LZWObject {
 		}
 		return ret;
 	}
-	//Byte.parseByte()? likely need to split each number into something less than 9 long
 	private static ArrayList<byte[]> stringToBinary(ArrayList<String> nums) {
 		int counter = 0;
 		ArrayList<byte[]> ret = new ArrayList<byte[]>();
