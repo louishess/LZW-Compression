@@ -45,7 +45,6 @@ public class LZWObject {
 		output.close();
 		}
 		
-	}
 	private static String toBinary(int x, int len)
     {
         if (len > 0)
