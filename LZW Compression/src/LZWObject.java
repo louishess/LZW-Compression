@@ -56,24 +56,20 @@ public class LZWObject {
  
         return null;
     }
-	private static ArrayList<String> allToBinary(ArrayList<Integer> ints) {
-		ArrayList<String> ret = new ArrayList<String>(ints.size());
+	private static String allToBinary(ArrayList<Integer> ints) {
+		StringBuilder str = new StringBuilder();
 		for (int num : ints) {
-			ret.add(toBinary(num, 9));
+			str.append(toBinary(num, 9));
 		}
-		return ret;
+		return str.toString();
 	}
-	private static ArrayList<byte[]> stringToBinary(ArrayList<String> nums) {
-		int counter = 0;
-		ArrayList<byte[]> ret = new ArrayList<byte[]>();
-		for (String str : nums) {
-			BigInteger number = new BigInteger(str);
-			ret.add(number.toByteArray());
-		}
-		return ret;
+	private static byte[] stringToBinary(String str) {
+		BigInteger ret = new BigInteger(str);
+		return ret.toByteArray();
 	}
 	public static void main (String [] args) throws IOException {
-		LZWObject obj = new LZWObject(new File("src/lzw-file3.txt"));
+		LZWObject obj = new LZWObject(new File("src/lzw-file2.txt"));
 		obj.encode();
+		
 	}
 }
