@@ -38,11 +38,11 @@ public class LZWObject {
 			}
 		}
 		reader.close();
-		ArrayList<String> stringBits = allToBinary(nums);
-		ArrayList<byte[]> bitArray = stringToBinary(stringBits);
+		String stringBits = allToBinary(nums);
+		byte[] bitArray = stringToBinary(stringBits);
 		FileOutputStream output = new FileOutputStream(new File ("output.txt"));
-		for (byte[] bits : bitArray) {
-			output.write(bits);
+		output.write(bitArray);
+		output.close();
 		}
 		
 	}
