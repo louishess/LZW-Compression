@@ -39,6 +39,7 @@ public class LZWObject {
 		}
 		reader.close();
 		String stringBits = allToBinary(nums);
+		System.out.println(stringBits.length());
 		byte[] bitArray = stringToBinary(stringBits);
 		FileOutputStream output = new FileOutputStream(new File ("output.txt"));
 		output.write(bitArray);
@@ -58,16 +59,22 @@ public class LZWObject {
 	private static String allToBinary(ArrayList<Integer> ints) {
 		StringBuilder str = new StringBuilder();
 		for (int num : ints) {
-			str.append(toBinary(num, 9));
+			System.out.println(str.length());
+			str.append(toBinary(num, 15));
 		}
 		return str.toString();
 	}
 	private static byte[] stringToBinary(String str) {
-		BigInteger ret = new BigInteger(str);
-		return ret.toByteArray();
+		byte[] bytes = new byte[str.length()/8];
+		int counter = 0;
+		for (int i = 0; i < str.length(); i+= 8) {
+			bytes[counter] = Byte.parseByte(str.substring(i, i+8));
+		}
+		return bytes;
 	}
 	public static void main (String [] args) throws IOException {
-		LZWObject obj = new LZWObject(new File("src/lzw-file2.txt"));
+		LZWObject obj = new LZWObject(new File("src/lzw-file3.txt"));
+		System.out.println ("Binary rep of 00000001 is: " + new BigInteger ("00000001").toByteArray());
 		obj.encode();
 		
 	}
