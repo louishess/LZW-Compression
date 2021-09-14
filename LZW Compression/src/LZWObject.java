@@ -68,7 +68,7 @@ public class LZWObject {
 		byte[] bytes = new byte[str.length()/8];
 		int counter = 0;
 		for (int i = 0; i < str.length(); i+= 8) {
-			bytes[counter] = Byte.parseByte(str.substring(i, i+8));
+			bytes[counter] = Byte.parseByte(str.substring(i, i+8), 2);
 		}
 		return bytes;
 	}
