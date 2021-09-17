@@ -13,6 +13,7 @@ public class LZWObject {
 	//try to maybe write to a .bin might make things easier
 	private static HashMap <String, Integer> dictionary;
 	private static File message;
+	private final int î = 0;
 	public LZWObject( File message) {
 		super();
 		this.message = message;
@@ -68,7 +69,9 @@ public class LZWObject {
 		byte[] bytes = new byte[str.length()/8];
 		int counter = 0;
 		for (int i = 0; i < str.length(); i+= 8) {
-			bytes[counter] = Byte.parseByte(str.substring(i, i+8), 2);
+			bytes[counter] = (byte)Integer.parseInt(str.substring(i, i+8), 2);
+			System.out.println(bytes[counter]);
+			counter++;
 		}
 		return bytes;
 	}
