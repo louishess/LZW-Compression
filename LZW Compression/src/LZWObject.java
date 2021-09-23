@@ -30,7 +30,9 @@ public class LZWObject {
 		super();
 		this.message = message;
 	}
+	// encodes message as a byteArray and outputs said byte array to output.txt
 	public static void encode() throws IOException {
+		final long startTime = System.currentTimeMillis();
 		dictionary = new HashMap<String, Integer>();
 		FileReader reader = new FileReader(message);
 		String current = "" + (char)reader.read();
@@ -44,7 +46,7 @@ public class LZWObject {
 		while (reader.ready()) {
 			if (!dictionary.containsKey(current + next)) {
 				dictionary.put(current + next, codeOn);
-				nums.add(codeOn);
+				nums.add(dictionary.get(current));
 				codeOn++;
 				current = next;
 				next = "" + (char)reader.read();
@@ -59,19 +61,20 @@ public class LZWObject {
 		byte[] bitArray = stringToBinary(stringBits);
 		FileOutputStream output = new FileOutputStream(new File ("output.txt"));
 		output.write(bitArray);
+		System.out.print(System.currentTimeMillis() - startTime); 
 		output.close();
 		}
-		
+		// converts a number to a binary string with len number of digits
 	private static String toBinary(int x, int len)
     {
         if (len > 0)
         {
-            return String.format("%" + len + "s",
-                            Integer.toBinaryString(x)).replaceAll(" ", "0");
+            return String.format("%" + len + "s", Integer.toBinaryString(x)).replaceAll(" ", "0");
         }
  
         return null;
     }
+	// converts an ArrayList of ints to a String composed of the 9 bit binary representation of each of those ints 
 	private static String allToBinary(ArrayList<Integer> ints) {
 		StringBuilder str = new StringBuilder();
 		for (int num : ints) {
@@ -79,24 +82,30 @@ public class LZWObject {
 		}
 		return str.toString();
 	}
+	// converts a string representation of binary values to a byte array
+	// puts extra 0's at the end of the String to ensure that it can be stored in a byte array (multiple of 8 bits)
 	private static byte[] stringToBinary(String str) {
-		while(str.length()%8 !=0)
+		int zeroes = (str.length() %8); 
+		if (zeroes != 0)
 		{
-			str += 0;
+			String zero = "0000000"; 
+			str += zero.substring(0, 8 - zeroes); 
 		}
+		
 		byte[] bytes = new byte[str.length()/8];
 		int counter = 0;
 		for (int i = 0; i < str.length(); i+= 8) {
 			bytes[counter] = (byte)Integer.parseInt(str.substring(i, i+8), 2);
-			System.out.println(bytes[counter]);
 			counter++;
 		}
 		return bytes;
 	}
+	// takes in a text file of binary and deciphers the binary
+	// reverses the operations of encode, outputing the original message to a text file
 	public void decode(String filename, int bitSize) throws IOException
 	{
-		
-		reinitializeDictionary();
+		final long startTime = System.currentTimeMillis();
+		initializeDecoderDictionary();
 		String masterString = readFromCompressedFile(filename, bitSize);
 		int [] integerValues = convertStringToIntegers(masterString, bitSize);
 		rebuildDictionary(integerValues);
@@ -112,10 +121,12 @@ public class LZWObject {
 				output.write(("" + decoderDictionary.get(integerValues[i])).replaceAll("null", "@"));
 			}
 		}
+		System.out.print(System.currentTimeMillis() - startTime); 
 		
 	}
 	
-	public void reinitializeDictionary()
+	// initializes decoderDictionary with ASCII
+	public void initializeDecoderDictionary()
 	{
 		decoderDictionary = new HashMap<Integer, String>();
 		for(int i = 0; i < 256; i++)
@@ -123,20 +134,21 @@ public class LZWObject {
 			decoderDictionary.put(i, "" + (char) i);
 		}
 	}
-	
+	// reads the file created by encode and returns a String of appended binary values
 	public String readFromCompressedFile(String filename, int bitSize) throws IOException
 	{
-		FileReader reader = new FileReader(filename);
-		String decoderMasterString = "";
+			FileReader reader = new FileReader(filename);
+			String decoderMasterString = "";
 			int character;
 			BufferedReader br = new BufferedReader(reader);
             while ((character = br.read()) != -1) {
-            	decoderMasterString += toBinary(character, 8);
+            decoderMasterString += toBinary(character, 8);
 		}
         decoderMasterString = decoderMasterString.substring(0, decoderMasterString.length() - decoderMasterString.length()%bitSize);
 		return decoderMasterString;
 	}
 	
+	// converts a given binary to string to an integer representation and returns that int
 	public int [] convertStringToIntegers(String binValueString, int bitSize)
 	{
 		int [] encodedValueArray = new int [binValueString.length()/bitSize];
@@ -144,19 +156,20 @@ public class LZWObject {
 		for(int i = 0; i < binValueString.length() - bitSize; i += bitSize)
 		{
 			encodedValueArray[counter] = Integer.parseInt(binValueString.substring(i, i + bitSize),2);
-			System.out.println(encodedValueArray[counter]);
 			counter++;
 		}
 		return encodedValueArray;
 	}
 	
+	
+	// loops through array of integers representing Strings in the encoder dictionary
+	// adds LZW combined ASCII values to the decoderDictionary to make it emthe encoder dict
 	public void rebuildDictionary(int [] numberEntries)
 	{
 		String c = "";
 		for(int i = 0; i < numberEntries.length; i++)
 		{
 			String cn = (c + decoderDictionary.get(numberEntries[i])).replaceAll("null", "@");
-			System.out.println(cn);
 			if(decoderDictionary.containsValue(cn))
 			{
 				c = cn;
@@ -167,14 +180,10 @@ public class LZWObject {
 				c = cn.substring(cn.length()-1);
 			}
 		}
-		for(int i = 0; i < numberEntries.length; i++)
-		{
-			System.out.println(numberEntries[i]);
-		}
 	}
 	
 	public static void main (String [] args) throws IOException {
-		LZWObject obj = new LZWObject(new File("lzw-file1.txt"));
+		LZWObject obj = new LZWObject(new File("lzw-file2.txt"));
 		obj.encode();
 		obj.decode("output.txt", 9);
 	}
