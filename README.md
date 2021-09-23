@@ -1,4 +1,14 @@
 # LZW-Compression
-The algorithm is slightly broken but the handling of the dictionary into binary is optimized properly – 9 bits are stored by 9 bits, not 2 bytes (16 bits); the algorithm needs to be touched up to store traditional ascii characters before doing other things so look out for that. If you fix the algorithm, the conversion into binary will still function properly.
+From a functionality perspective: 
+The encode method has been improved from prior versions although it is still not ideal -- before the encode method did not encode the current value and instead
+added the dictionary value (256,257 . . . ) sequentially. Now it at least correctly encodes the current value (edge cases have not been tested).
+The decode method appears to be functioning correctly. 
 
-https://www.youtube.com/watch?v=iik25wqIuFo watch this for specific information – instructional video on how to make algorithm. I commented on the bottom to explain what was wrong with mine.
+From a big O perspective:
+A for loop has been eliminated in the encdoe method which caused a decrease in run time from 11587 ---> 45 overall. 
+Some of this decrease can be attributed to eliminating System.out.println methods that were used by the initial coder to test the code
+System.out.println have also been removed from the decode method decreasing the runtime from 4298 --> 14 overalll
+
+From a code clarity persepctive: at least 1 method was renamed to more accurately reflect what the method accomplishes. 
+I tried very hard to maintain Louis and Tyler's stylistic variable names and method names --- comments were used to explain methods that were oddly named 
+or carried out numerous operations at the same time. 
